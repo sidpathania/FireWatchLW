@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wallpaper
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/app_name"
+    android:settingsActivity="com.siddharthpathania.firewatchparallaxlw.SettingsActivity"
+    android:thumbnail="@drawable/icon_wall"/>

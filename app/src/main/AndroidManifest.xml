@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.siddharthpathania.firewatchparallaxlw">
+    <uses-feature
+        android:name="android.software.live_wallpaper"
+        android:required="true" >
+    </uses-feature>
+
+    <application
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="true">
+        <activity
+            android:name="com.siddharthpathania.firewatchparallaxlw.SettingsActivity"
+            android:exported="true"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <service
+            android:name="com.siddharthpathania.firewatchparallaxlw.FireWatchWallpaperService"
+            android:enabled="true"
+            android:label="FireWatch Wallpaper"
+            android:permission="android.permission.BIND_WALLPAPER" >
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/wallpaper" >
+            </meta-data>
+        </service>
+    </application>
+
+</manifest>

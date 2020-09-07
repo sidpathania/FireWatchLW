@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Firewatch Parallax Wallpaper</string>
+    <string name="legal">Legal</string>
+    <string name="license">Licence</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="range_of_motion">Range of Motion</string>
+    <string name="in_percent">In Percentage</string>
+    <string name="layer_7">Layer 7</string>
+    <string name="foreground">Foreground Layer</string>
+    <string name="layer_6">Layer 6</string>
+    <string name="layer_5">Layer 5</string>
+    <string name="layer_4">Layer 4</string>
+    <string name="layer_3">Layer 3</string>
+    <string name="layer_2">Layer 2</string>
+    <string name="layer_1">Layer 1</string>
+    <string name="background">Background Layer</string>
+    <string name="set_default">Set To Default</string>
+</resources>
