@@ -15,4 +15,6 @@
     <string name="layer_1">Layer 1</string>
     <string name="background">Background Layer</string>
     <string name="set_default">Set To Default</string>
+    <string name="crop_scaling">Scaling Factor</string>
+    <string name="landscape">For Landscape Mode</string>
 </resources>

@@ -31,6 +31,8 @@ class SettingsActivity:AppCompatActivity() {
         private lateinit var lyr3:SeekBarPreference
         private lateinit var lyr2:SeekBarPreference
         private lateinit var lyr1:SeekBarPreference
+        private lateinit var sclFactor:SeekBarPreference
+
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -45,6 +47,8 @@ class SettingsActivity:AppCompatActivity() {
             lyr3 = findPreference<Preference>("L3") as SeekBarPreference
             lyr2 = findPreference<Preference>("L2") as SeekBarPreference
             lyr1 = findPreference<Preference>("L1") as SeekBarPreference
+            sclFactor = findPreference<Preference>("ScaleFactor") as SeekBarPreference
+
         }
 
         private fun showPrefs (): Boolean {
@@ -94,6 +98,7 @@ class SettingsActivity:AppCompatActivity() {
             lyr3.value = 40
             lyr2.value = 25
             lyr1.value = 10
+            sclFactor.value = 85
             return true
         }
     }

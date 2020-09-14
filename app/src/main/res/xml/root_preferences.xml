@@ -63,6 +63,15 @@
             app:title="@string/layer_1"
             app:summary="@string/background"
             />
+        <SeekBarPreference
+            android:max="100"
+            app:defaultValue="85"
+            app:key="ScaleFactor"
+            app:min="0"
+            app:showSeekBarValue="true"
+            app:title="@string/crop_scaling"
+            app:summary="@string/landscape"
+            />
         <Preference
             app:title="@string/set_default"
             app:key="set_default"/>

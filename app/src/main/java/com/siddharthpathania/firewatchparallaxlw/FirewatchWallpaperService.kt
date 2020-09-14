@@ -3,6 +3,7 @@ package com.siddharthpathania.firewatchparallaxlw
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -10,8 +11,10 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.service.wallpaper.WallpaperService
+import android.util.Log
 import android.view.SurfaceHolder
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.helper.widget.Layer
 import androidx.preference.PreferenceManager
 
 
@@ -31,6 +34,8 @@ class FireWatchWallpaperService: WallpaperService() {
         private lateinit var layer7:Bitmap
         private var width: Int = 0
         private var height: Int = 0
+        private var imgWidth:Int = 0
+        private var imgHeight:Int = 0
         private var src1:Rect = Rect(0, 0, 0, 0)
         private var src2:Rect = Rect(0, 0, 0, 0)
         private var src3:Rect = Rect(0, 0, 0, 0)
@@ -46,6 +51,8 @@ class FireWatchWallpaperService: WallpaperService() {
         private var l3:Float = 0F
         private var l2:Float = 0F
         private var l1:Float = 0F
+        private var scaling:Float = 0F
+        private var xOff:Float = 0F
         val listener =
             SharedPreferences.OnSharedPreferenceChangeListener { prefs, _ ->
                 updatePreference(prefs)
@@ -60,6 +67,7 @@ class FireWatchWallpaperService: WallpaperService() {
                 l3 = preference.getInt("L3",40).toFloat()/100F
                 l2 = preference.getInt("L2",25).toFloat()/100F
                 l1 = preference.getInt("L1",10).toFloat()/100F
+                scaling = preference.getInt("ScaleFactor",85).toFloat()/100F
             }
         }
 
@@ -78,9 +86,12 @@ class FireWatchWallpaperService: WallpaperService() {
             layer5 = getDrawable(R.drawable.layer5)?.let { drawableToBitmap(it) }!!
             layer6 = getDrawable(R.drawable.layer6)?.let { drawableToBitmap(it) }!!
             layer7 = getDrawable(R.drawable.layer7)?.let { drawableToBitmap(it) }!!
+            this.imgHeight = layer7.height
+            this.imgWidth = layer7.width
             handler.post(drawRunner)
         }
         override fun onVisibilityChanged(visible: Boolean) {
+            super.onVisibilityChanged(visible)
             this.visible = visible
             handler.removeCallbacks(drawRunner)
             if (visible) {
@@ -88,6 +99,7 @@ class FireWatchWallpaperService: WallpaperService() {
             }
         }
         override fun onSurfaceCreated(holder: SurfaceHolder?) {
+            super.onSurfaceCreated(holder)
             handler.removeCallbacks(drawRunner)
             if (visible) {
                 handler.post(drawRunner)
@@ -99,11 +111,11 @@ class FireWatchWallpaperService: WallpaperService() {
             handler.removeCallbacks(drawRunner)
         }
         override fun onSurfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int){
+            super.onSurfaceChanged(holder, format, width, height)
             this.width = width
             this.height = height
             handler.removeCallbacks(drawRunner)
             handler.post(drawRunner)
-            super.onSurfaceChanged(holder, format, width, height)
         }
         override fun onOffsetsChanged(
             xOffset: Float,
@@ -121,15 +133,7 @@ class FireWatchWallpaperService: WallpaperService() {
                 xPixelOffset,
                 yPixelOffset
             )
-            var x = layer7.height*this.width/this.height
-            var a = layer7.width/2 - x/2
-            src7 = Rect((a+a*l7*(xOffset*2-1)).toInt(),0,(a+a*l7*(xOffset*2-1)+x).toInt(),layer7.height)
-            src6 = Rect((a+a*l6*(xOffset*2-1)).toInt(),0,(a+a*l6*(xOffset*2-1)+x).toInt(),layer7.height)
-            src5 = Rect((a+a*l5*(xOffset*2-1)).toInt(),0,(a+a*l5*(xOffset*2-1)+x).toInt(),layer7.height)
-            src4 = Rect((a+a*l4*(xOffset*2-1)).toInt(),0,(a+a*l4*(xOffset*2-1)+x).toInt(),layer7.height)
-            src3 = Rect((a+a*l3*(xOffset*2-1)).toInt(),0,(a+a*l3*(xOffset*2-1)+x).toInt(),layer7.height)
-            src2 = Rect((a+a*l2*(xOffset*2-1)).toInt(),0,(a+a*l2*(xOffset*2-1)+x).toInt(),layer7.height)
-            src1 = Rect((a+a*l1*(xOffset*2-1)).toInt(),0,(a+a*l1*(xOffset*2-1)+x).toInt(),layer7.height)
+            xOff = xOffset
             handler.removeCallbacks(drawRunner)
             handler.post(drawRunner)
         }
@@ -144,7 +148,9 @@ class FireWatchWallpaperService: WallpaperService() {
                     holder.lockCanvas()
                 }
             } catch (e: Exception){}
-            if(canvas!=null) { val dst:Rect = Rect(0, 0, this.width, this.height)
+            if(canvas!=null) {
+                val dst:Rect = Rect(0, 0, this.width, this.height)
+                calcSrcDimen()
                 canvas.drawBitmap(layer1, src1, dst, null)
                 canvas.drawBitmap(layer2, src2, dst, null)
                 canvas.drawBitmap(layer3, src3, dst, null)
@@ -159,6 +165,21 @@ class FireWatchWallpaperService: WallpaperService() {
                 } catch (e: Exception){}
             }
             handler.removeCallbacks(drawRunner)
+        }
+
+        private fun calcSrcDimen() {
+            var cropHeight:Int = imgHeight
+            if(width.toFloat()/height>imgWidth.toFloat()*scaling/imgHeight)
+                cropHeight = (imgHeight*imgWidth*scaling/this.width).toInt()
+            var x = cropHeight*this.width/this.height
+            var a = imgWidth/2 - x/2
+            src7 = Rect((a+a*l7*(xOff*2-1)).toInt(),imgHeight-cropHeight,(a+a*l7*(xOff*2-1)+x).toInt(),imgHeight)
+            src6 = Rect((a+a*l6*(xOff*2-1)).toInt(),imgHeight-cropHeight,(a+a*l6*(xOff*2-1)+x).toInt(),imgHeight)
+            src5 = Rect((a+a*l5*(xOff*2-1)).toInt(),imgHeight-cropHeight,(a+a*l5*(xOff*2-1)+x).toInt(),imgHeight)
+            src4 = Rect((a+a*l4*(xOff*2-1)).toInt(),imgHeight-cropHeight,(a+a*l4*(xOff*2-1)+x).toInt(),imgHeight)
+            src3 = Rect((a+a*l3*(xOff*2-1)).toInt(),imgHeight-cropHeight,(a+a*l3*(xOff*2-1)+x).toInt(),imgHeight)
+            src2 = Rect((a+a*l2*(xOff*2-1)).toInt(),imgHeight-cropHeight,(a+a*l2*(xOff*2-1)+x).toInt(),imgHeight)
+            src1 = Rect((a+a*l1*(xOff*2-1)).toInt(),imgHeight-cropHeight,(a+a*l1*(xOff*2-1)+x).toInt(),imgHeight)
         }
 
 
