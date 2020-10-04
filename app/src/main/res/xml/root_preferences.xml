@@ -77,6 +77,16 @@
             app:key="set_default"/>
     </PreferenceCategory>
     <PreferenceCategory
+        android:layout_height="wrap_content"
+        app:title="@string/performance">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="use_antialiasing"
+            app:title="@string/use_antialiasing" />
+
+    </PreferenceCategory>
+    <PreferenceCategory
         app:title="@string/legal">
         <Preference
             app:title="@string/license"

@@ -17,4 +17,6 @@
     <string name="set_default">Set To Default</string>
     <string name="crop_scaling">Scaling Factor</string>
     <string name="landscape">For Landscape Mode</string>
+    <string name="performance">Performance</string>
+    <string name="use_antialiasing">Use Antialiasing</string>
 </resources>

@@ -3,6 +3,7 @@ package com.siddharthpathania.firewatchparallaxlw
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -54,6 +55,7 @@ class FireWatchWallpaperService: WallpaperService() {
         private var scaling:Float = 0F
         private var xOff:Float = 0F
         private var reDraw:Boolean = false
+        private var antiAliasing = true
         val listener =
             SharedPreferences.OnSharedPreferenceChangeListener { prefs, _ ->
                 updatePreference(prefs)
@@ -69,6 +71,7 @@ class FireWatchWallpaperService: WallpaperService() {
                 l2 = preference.getInt("L2", 25).toFloat()/100F
                 l1 = preference.getInt("L1", 10).toFloat()/100F
                 scaling = preference.getInt("ScaleFactor", 85).toFloat()/100F
+                antiAliasing = preference.getBoolean("use_antialiasing",true)
             }
         }
 
@@ -156,13 +159,14 @@ class FireWatchWallpaperService: WallpaperService() {
             if(canvas!=null) {
                 val dst:Rect = Rect(0, 0, this.width, this.height)
                 calcSrcDimen()
-                canvas.drawBitmap(layer1, src1, dst, null)
-                canvas.drawBitmap(layer2, src2, dst, null)
-                canvas.drawBitmap(layer3, src3, dst, null)
-                canvas.drawBitmap(layer4, src4, dst, null)
-                canvas.drawBitmap(layer5, src5, dst, null)
-                canvas.drawBitmap(layer6, src6, dst, null)
-                canvas.drawBitmap(layer7, src7, dst, null)
+                val drawPaint = Paint(if (antiAliasing) Paint.ANTI_ALIAS_FLAG else 0)
+                canvas.drawBitmap(layer1, src1, dst, drawPaint)
+                canvas.drawBitmap(layer2, src2, dst, drawPaint)
+                canvas.drawBitmap(layer3, src3, dst, drawPaint)
+                canvas.drawBitmap(layer4, src4, dst, drawPaint)
+                canvas.drawBitmap(layer5, src5, dst, drawPaint)
+                canvas.drawBitmap(layer6, src6, dst, drawPaint)
+                canvas.drawBitmap(layer7, src7, dst, drawPaint)
             }
             if (canvas != null) {
                 try {
